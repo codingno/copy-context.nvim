@@ -1,11 +1,11 @@
 local M = {}
 
 local defaults = {
-  path_style = "relative",
+  path_style = "absolute",
   include_content = true,
   clipboard_register = "+",
   notify = true,
-  format = "markdown",
+  format = "context",
 }
 
 M.config = vim.deepcopy(defaults)
@@ -54,7 +54,7 @@ local function build_default_text(ctx)
 
   local content = table.concat(ctx.content, "\n")
 
-  if M.config.format == "plain" then
+  if M.config.format == "context" or M.config.format == "plain" then
     return string.format("%s\n\n%s", range, content)
   end
 

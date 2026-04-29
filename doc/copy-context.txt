@@ -1,4 +1,4 @@
-*copy-context.nvim* Copy selected code context for AI chat tools
+*copy-context.nvim* Copy selected code context for Opencode and AI chat tools
 
 ===============================================================================
 INTRODUCTION                                             *copy-context.nvim-intro*
@@ -6,13 +6,13 @@ INTRODUCTION                                             *copy-context.nvim-intr
 copy-context.nvim copies the current visual selection to the system clipboard
 with the current file path and selected line range.
 
+Paste the copied text into Opencode, then add your instruction after it.
+
 Default output: >
 
-  `lua/example.lua:12-20`
+  /Users/codingno/project/lua/example.lua:12-20
 
-  ```lua
   selected code here
-  ```
 <
 
 ===============================================================================
@@ -23,7 +23,7 @@ With lazy.nvim: >lua
   return {
     "codingno/copy-context.nvim",
     opts = {
-      path_style = "relative",
+      path_style = "absolute",
       include_content = true,
     },
     keys = {
@@ -45,11 +45,11 @@ CONFIG                                                   *copy-context.nvim-conf
 Defaults: >lua
 
   require("copy-context").setup({
-    path_style = "relative",
+    path_style = "absolute",
     include_content = true,
     clipboard_register = "+",
     notify = true,
-    format = "markdown",
+    format = "context",
   })
 <
 
@@ -73,7 +73,7 @@ notify ~
 
                                                            *copy-context.format*
 format ~
-  "markdown", "plain", or a custom function.
+  "context", "markdown", "plain", or a custom function.
 
 ===============================================================================
 API                                                         *copy-context.nvim-api*
