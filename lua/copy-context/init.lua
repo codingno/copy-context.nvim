@@ -24,6 +24,25 @@ local function normalize_range(start_line, end_line)
   return end_line, start_line
 end
 
+local function get_visual_range()
+  local mode = vim.fn.mode()
+
+  if mode == "v" or mode == "V" or mode == "\22" then
+    local visual_start = vim.fn.getpos("v")[2]
+    local visual_end = vim.fn.getpos(".")[2]
+    return normalize_range(visual_start, visual_end)
+  end
+
+  local start_line = vim.fn.line("'<")
+  local end_line = vim.fn.line("'>")
+
+  if start_line == 0 or end_line == 0 then
+    return nil, nil
+  end
+
+  return normalize_range(start_line, end_line)
+end
+
 local function get_path(bufnr)
   local absolute_path = vim.api.nvim_buf_get_name(bufnr)
 
@@ -65,19 +84,20 @@ end
 
 function M.setup(opts)
   M.config = vim.tbl_deep_extend("force", vim.deepcopy(defaults), opts or {})
+
+  vim.api.nvim_create_user_command("CopyContext", function()
+    M.copy_visual()
+  end, { range = true })
 end
 
 function M.copy_visual()
   local bufnr = 0
-  local start_line = vim.fn.line("'<")
-  local end_line = vim.fn.line("'>")
+  local start_line, end_line = get_visual_range()
 
-  if start_line == 0 or end_line == 0 then
+  if not start_line or not end_line then
     notify("No visual selection found", vim.log.levels.WARN)
     return
   end
-
-  start_line, end_line = normalize_range(start_line, end_line)
 
   local path, absolute_path, filename = get_path(bufnr)
   local content = vim.api.nvim_buf_get_lines(bufnr, start_line - 1, end_line, false)
