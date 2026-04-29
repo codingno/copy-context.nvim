@@ -1,0 +1,89 @@
+*copy-context.nvim* Copy selected code context for AI chat tools
+
+===============================================================================
+INTRODUCTION                                             *copy-context.nvim-intro*
+
+copy-context.nvim copies the current visual selection to the system clipboard
+with the current file path and selected line range.
+
+Default output: >
+
+  `lua/example.lua:12-20`
+
+  ```lua
+  selected code here
+  ```
+<
+
+===============================================================================
+SETUP                                                     *copy-context.nvim-setup*
+
+With lazy.nvim: >lua
+
+  return {
+    "codingno/copy-context.nvim",
+    opts = {
+      path_style = "relative",
+      include_content = true,
+    },
+    keys = {
+      {
+        "<C-l>",
+        function()
+          require("copy-context").copy_visual()
+        end,
+        mode = "v",
+        desc = "Copy selected code context",
+      },
+    },
+  }
+<
+
+===============================================================================
+CONFIG                                                   *copy-context.nvim-config*
+
+Defaults: >lua
+
+  require("copy-context").setup({
+    path_style = "relative",
+    include_content = true,
+    clipboard_register = "+",
+    notify = true,
+    format = "markdown",
+  })
+<
+
+Options:
+
+                                                        *copy-context.path_style*
+path_style ~
+  "relative", "absolute", or "filename".
+
+                                                  *copy-context.include_content*
+include_content ~
+  Whether to include selected code content after the file reference.
+
+                                               *copy-context.clipboard_register*
+clipboard_register ~
+  Register to copy to. Defaults to "+".
+
+                                                           *copy-context.notify*
+notify ~
+  Whether to show a notification after copying.
+
+                                                           *copy-context.format*
+format ~
+  "markdown", "plain", or a custom function.
+
+===============================================================================
+API                                                         *copy-context.nvim-api*
+
+                                                        *copy-context.setup()*
+setup({opts}) ~
+  Configure the plugin.
+
+                                                  *copy-context.copy_visual()*
+copy_visual() ~
+  Copy the current visual selection as file context.
+
+vim:tw=78:ts=8:ft=help:norl:
